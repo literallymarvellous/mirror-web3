@@ -2,15 +2,15 @@ import dynamic from "next/dynamic";
 import { Suspense, useCallback, useState } from "react";
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
-  suspense: true,
 });
 import "easymde/dist/easymde.min.css";
+import { NextPage } from "next";
 
-const initialState = { title: "", content: "" };
-
-const CreatePost = () => {
-  const [post, setPost] = useState(initialState);
-  const [image, setImage] = useState<string | null>(null);
+const CreatePost: NextPage = () => {
+  const [post, setPost] = useState({
+    title: "",
+    content: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPost((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -28,14 +28,12 @@ const CreatePost = () => {
         value={post.title}
         onChange={handleChange}
       />
-      <Suspense fallback={`loading...`}>
-        <SimpleMDE
-          className="w-full"
-          placeholder="What's on your mind?"
-          value={post.content}
-          onChange={editorChange}
-        />
-      </Suspense>
+      <SimpleMDE
+        className="w-full"
+        placeholder="What's on your mind?"
+        value={post.content}
+        onChange={editorChange}
+      />
     </div>
   );
 };

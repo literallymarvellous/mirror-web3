@@ -10,11 +10,21 @@ import { useContractRead } from "wagmi";
 import blogABI from "../../artifacts/contracts/Blog.sol/Blog.json";
 import { contractAddress } from "../config";
 import { ethers } from "ethers";
-import { Suspense } from "react";
 
 const Home: NextPage = ({
   posts,
 }: InferGetServerSidePropsType<GetServerSideProps>) => {
+  // const { data } = useContractRead({
+  //   addressOrName: contractAddress,
+  //   contractInterface: blogABI.abi,
+  //   functionName: "fetchPosts",
+  //   select(data) {
+  //     return JSON.parse(JSON.stringify(data));
+  //   },
+  //   cacheTime: 100000,
+  // });
+
+  // console.log("data", data);
   const router = useRouter();
 
   const handleClick = async () => {
@@ -38,6 +48,14 @@ const Home: NextPage = ({
           </Link>
         ))}
       </div>
+
+      {/* <div>
+        {data?.slice(1).map((post, i) => (
+          <Link key={i} href={`/post/${post[2]}`}>
+            <p>{post[1]}</p>
+          </Link>
+        ))}
+      </div> */}
 
       <div>
         <button className="flex items-center" onClick={handleClick}>
