@@ -19,7 +19,7 @@ contract Blog {
     }
 
     /** 
-      @notice creates lookups for posts by id and hash
+        @notice creates lookups for posts by id and hash
       */
     mapping(uint256 => Post) public idToPost;
     mapping(string => Post) public hashToPost;
