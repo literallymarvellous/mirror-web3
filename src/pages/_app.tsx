@@ -32,10 +32,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={darkTheme()}>
-        <div>
-          <ConnectButton />
-          <Component {...pageProps} />
+        <div
+          style={{
+            position: "fixed",
+            top: 5,
+            right: 5,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ConnectButton chainStatus="icon" />
         </div>
+        <Component {...pageProps} />
       </RainbowKitProvider>
     </WagmiConfig>
   );
