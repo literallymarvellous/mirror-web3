@@ -40,6 +40,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            zIndex: 10,
           }}
         >
           <ConnectButton chainStatus="icon" />

@@ -12,6 +12,7 @@
     "@openzeppelin/contracts": "^4.7.0",
     "@rainbow-me/rainbowkit": "^0.4.1",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "easymde": "^2.16.1",
     "ipfs-http-client": "^57.0.3",
     "next": "12.2.0",
     "react": "18.2.0",

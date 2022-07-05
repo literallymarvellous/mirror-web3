@@ -8,6 +8,8 @@ async function main() {
   await blog.deployed();
   const deployerAddress = await blog.signer.getAddress();
 
+  console.log("Blog deployed to: ", blog.address);
+
   await blog.createPost("My first post", "12345");
   await blog.createPost("My second post", "23456");
   await blog.createPost("My third post", "34567");

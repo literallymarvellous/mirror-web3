@@ -1,28 +1,26 @@
-import type { NextPage } from "next";
+import type {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContractRead } from "wagmi";
 import blogABI from "../../artifacts/contracts/Blog.sol/Blog.json";
-import { ownerAddress, contractAddress } from "../config";
+import { contractAddress } from "../config";
+import { ethers } from "ethers";
+import { Suspense } from "react";
 
-const Home: NextPage = () => {
-  console.log("hey");
-  const { data, isLoading, isError } = useContractRead({
-    addressOrName: contractAddress,
-    contractInterface: blogABI.abi,
-    functionName: "fetchPosts",
-  });
-
+const Home: NextPage = ({
+  posts,
+}: InferGetServerSidePropsType<GetServerSideProps>) => {
   const router = useRouter();
 
   const handleClick = async () => {
-    router.push("/post");
+    router.push("/create");
   };
 
-  isLoading && <p>Loading...</p>;
-
-  console.log(data);
   return (
     <div className="">
       <Head>
@@ -32,11 +30,14 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="text-3xl font-bold">Mirror</div>
-      {data?.slice(1).map((post, i) => (
-        <Link href={`/post/${post[2]}`} key={i}>
-          <p>{post[1]}</p>
-        </Link>
-      ))}
+
+      <div>
+        {posts?.slice(1).map((post, i) => (
+          <Link key={i} href={`/post/${post[2]}`}>
+            <p>{post[1]}</p>
+          </Link>
+        ))}
+      </div>
 
       <div>
         <button className="flex items-center" onClick={handleClick}>
@@ -59,6 +60,27 @@ const Home: NextPage = () => {
       </div>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  let provider;
+  if (process.env.ENVIRONMENT === "local") {
+    provider = new ethers.providers.JsonRpcProvider();
+  } else if (process.env.ENVIRONMENT === "testnet") {
+    provider = new ethers.providers.JsonRpcProvider(
+      "https://rpc-mumbai.matic.today"
+    );
+  } else {
+    provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
+  }
+
+  const contract = new ethers.Contract(contractAddress, blogABI.abi, provider);
+  const data = await contract.fetchPosts();
+  return {
+    props: {
+      posts: JSON.parse(JSON.stringify(data)),
+    },
+  };
 };
 
 export default Home;
