@@ -28,7 +28,7 @@ const Home: NextPage = ({
   const router = useRouter();
 
   const handleClick = async () => {
-    router.push("/create");
+    router.push("/posts/create");
   };
 
   return (
@@ -86,10 +86,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
     provider = new ethers.providers.JsonRpcProvider();
   } else if (process.env.ENVIRONMENT === "testnet") {
     provider = new ethers.providers.JsonRpcProvider(
-      "https://rpc-mumbai.matic.today"
+      "https://polygon-mumbai.infura.io/v3/e5f57e3684bf43068b71f7a25887cd46"
     );
   } else {
-    provider = new ethers.providers.JsonRpcProvider("https://polygon-rpc.com/");
+    provider = new ethers.providers.JsonRpcProvider(
+      "https://mainnet.infura.io/v3/e5f57e3684bf43068b71f7a25887cd46"
+    );
   }
 
   const contract = new ethers.Contract(contractAddress, blogABI.abi, provider);

@@ -9,6 +9,7 @@ async function main() {
   const deployerAddress = await blog.signer.getAddress();
 
   console.log("Blog deployed to: ", blog.address);
+  console.log("Deployer address: ", deployerAddress);
 
   await blog.createPost("My first post", "12345");
   await blog.createPost("My second post", "23456");

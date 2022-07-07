@@ -7,7 +7,7 @@ pragma solidity ^0.8.13;
  * @notice An example of a blog contract
  */
 contract Blog {
-    uint256 private counter;
+    uint256 public counter;
     string public name;
     address public owner;
 
@@ -113,8 +113,8 @@ contract Blog {
         uint256 itemCount = counter;
 
         Post[] memory posts = new Post[](itemCount);
-        for (uint256 i = 1; i < itemCount; ) {
-            Post storage currentItem = idToPost[i];
+        for (uint256 i = 0; i < itemCount; ) {
+            Post storage currentItem = idToPost[i + 1];
             posts[i] = currentItem;
 
             unchecked {
@@ -125,7 +125,7 @@ contract Blog {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == owner, "Only owner can call this function");
         _;
     }
 }

@@ -13,7 +13,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { APP_NAME } from "../constants";
 
 const { chains, provider } = configureChains(
-  [chain.polygonMumbai, chain.localhost],
+  [chain.localhost, chain.polygonMumbai],
   [infuraProvider({ infuraId: process.env.INFURA_ID }), publicProvider()]
 );
 
@@ -23,7 +23,6 @@ const { connectors } = getDefaultWallets({
 });
 
 const wagmiClient = createClient({
-  autoConnect: true,
   connectors,
   provider,
 });
