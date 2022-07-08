@@ -8,7 +8,7 @@ import "easymde/dist/easymde.min.css";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { create } from "ipfs-http-client";
-import { useAccount, useContractWrite, useNetwork, useSigner } from "wagmi";
+import { useAccount, useContractWrite } from "wagmi";
 import { contractAddress } from "../../config";
 import blogABI from "../../../artifacts/contracts/Blog.sol/Blog.json";
 
@@ -19,16 +19,15 @@ const CreatePost: NextPage = () => {
   const [post, setPost] = useState({
     title: "",
     content: "",
-    hash: "",
   });
   const [image, setImage] = useState<File>();
   const [error, setError] = useState<string>();
   const fileRef = useRef<HTMLInputElement>(null!);
 
-  const { title, content, hash } = post;
+  const { title, content } = post;
   const { isConnected } = useAccount();
 
-  const { data, write, writeAsync } = useContractWrite({
+  const { write } = useContractWrite({
     addressOrName: contractAddress,
     contractInterface: blogABI.abi,
     functionName: "createPost",
@@ -54,7 +53,6 @@ const CreatePost: NextPage = () => {
 
     const hash = await savePostToIpfs();
     if (hash) {
-      setPost((p) => ({ ...p, hash }));
       write({
         args: [title, hash],
       });

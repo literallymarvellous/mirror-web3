@@ -6,26 +6,17 @@ import type {
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContractRead } from "wagmi";
+import { useAccount } from "wagmi";
 import blogABI from "../../artifacts/contracts/Blog.sol/Blog.json";
-import { contractAddress } from "../config";
-import { ethers } from "ethers";
+import { contractAddress, ownerAddress } from "../config";
+import { ethers, BigNumber } from "ethers";
 
-const Home: NextPage = ({
-  posts,
-}: InferGetServerSidePropsType<GetServerSideProps>) => {
-  // const { data } = useContractRead({
-  //   addressOrName: contractAddress,
-  //   contractInterface: blogABI.abi,
-  //   functionName: "fetchPosts",
-  //   select(data) {
-  //     return JSON.parse(JSON.stringify(data));
-  //   },
-  //   cacheTime: 100000,
-  // });
+type Posts = [BigNumber, string, string, boolean][];
 
-  // console.log("data", data);
+const Home: NextPage<{ posts: Posts }> = ({ posts }) => {
   const router = useRouter();
+
+  const { isConnected, address } = useAccount();
 
   const handleClick = async () => {
     router.push("/posts/create");
@@ -43,45 +34,41 @@ const Home: NextPage = ({
 
       <div>
         {posts?.slice(1).map((post, i) => (
-          <Link key={i} href={`/post/${post[2]}`}>
-            <p>{post[1]}</p>
+          <Link key={i} href={`/posts/${post[2]}`}>
+            <a>
+              <p>{post[1]}</p>
+            </a>
           </Link>
         ))}
       </div>
 
-      {/* <div>
-        {data?.slice(1).map((post, i) => (
-          <Link key={i} href={`/post/${post[2]}`}>
-            <p>{post[1]}</p>
-          </Link>
-        ))}
-      </div> */}
-
       <div>
-        <button className="flex items-center" onClick={handleClick}>
-          <span>Create post</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
+        {isConnected && address === ownerAddress ? (
+          <button className="flex items-center" onClick={handleClick}>
+            <span>Create post</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        ) : null}
       </div>
     </div>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  let provider;
+  let provider: ethers.providers.JsonRpcProvider;
   if (process.env.ENVIRONMENT === "local") {
     provider = new ethers.providers.JsonRpcProvider();
   } else if (process.env.ENVIRONMENT === "testnet") {
@@ -96,9 +83,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const contract = new ethers.Contract(contractAddress, blogABI.abi, provider);
   const data = await contract.fetchPosts();
+  const posts: Posts = JSON.parse(JSON.stringify(data));
+
   return {
     props: {
-      posts: JSON.parse(JSON.stringify(data)),
+      posts,
     },
   };
 };

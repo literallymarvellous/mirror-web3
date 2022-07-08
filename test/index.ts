@@ -41,8 +41,6 @@ describe("Blog", async function () {
     await blog.createPost("My first post", "12345");
     await blog.createPost("My second post", "23456");
 
-    console.log(await blog.counter());
-
     const posts = await blog.fetchPosts();
     console.log(posts);
     expect(posts.length).to.equal(2);
