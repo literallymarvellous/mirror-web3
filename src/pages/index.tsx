@@ -33,7 +33,7 @@ const Home: NextPage<{ posts: Posts }> = ({ posts }) => {
       <div className="text-3xl font-bold">Mirror</div>
 
       <div>
-        {posts?.slice(1).map((post, i) => (
+        {posts?.map((post, i) => (
           <Link key={i} href={`/posts/${post[2]}`}>
             <a>
               <p>{post[1]}</p>

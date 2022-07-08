@@ -11,12 +11,6 @@ async function main() {
   console.log("Blog deployed to: ", blog.address);
   console.log("Deployer address: ", deployerAddress);
 
-  await blog.createPost("My first post", "12345");
-  await blog.createPost("My second post", "23456");
-  await blog.createPost("My third post", "34567");
-  await blog.createPost("My fourth post", "45678");
-  await blog.createPost("My fifth post", "56789");
-
   /* this code writes the contract addresses to a local */
   /* file named config.js that we can use in the app */
   fs.writeFileSync(

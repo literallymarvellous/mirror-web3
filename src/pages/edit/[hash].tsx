@@ -26,7 +26,6 @@ type EditPost = {
 };
 
 const EditPost: NextPage<{ post: EditPost }> = ({ post }) => {
-  console.log(post);
   const router = useRouter();
   const [postData, setPostData] = useState({
     title: "",

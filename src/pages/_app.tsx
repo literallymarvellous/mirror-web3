@@ -13,7 +13,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { APP_NAME } from "../constants";
 
 const { chains, provider } = configureChains(
-  [chain.localhost, chain.polygonMumbai],
+  [chain.polygonMumbai, chain.polygon, chain.localhost],
   [infuraProvider({ infuraId: process.env.INFURA_ID }), publicProvider()]
 );
 

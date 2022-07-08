@@ -27,7 +27,6 @@ type Post = {
 };
 
 const Post: NextPage<{ post: Post }> = ({ post }) => {
-  console.log(post);
   const { isConnected, address } = useAccount();
   const router = useRouter();
   const { hash } = router.query as IParams;
@@ -99,11 +98,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { hash } = params as IParams;
 
-  const ipfsUrl = `${ipfsURI}${hash}`;
+  const ipfsUrl = `${ipfsURI}/${hash}`;
   const post = await fetch(ipfsUrl).then((res) => res.json());
 
   if (post.coverImage) {
-    post.coverImage = `${ipfsURI}/${post.coverImage}`;
+    post.coverImage = `${ipfsURI}${post.coverImage}`;
   }
 
   return {
