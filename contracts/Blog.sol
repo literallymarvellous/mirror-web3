@@ -7,7 +7,7 @@ pragma solidity ^0.8.13;
  * @notice An example of a blog contract
  */
 contract Blog {
-    uint256 public counter;
+    uint256 private counter;
     string public name;
     address public owner;
 
@@ -21,13 +21,13 @@ contract Blog {
     /** 
         @notice creates lookups for posts by id and hash
       */
-    mapping(uint256 => Post) public idToPost;
-    mapping(string => Post) public hashToPost;
+    mapping(uint256 => Post) private idToPost;
+    mapping(string => Post) private hashToPost;
 
     /* EVENTS */
-    event PostCreated(uint256 indexed postId, string title, string hash);
+    event PostCreated(uint256 postId, string title, string hash);
     event PostUpdated(
-        uint256 indexed postId,
+        uint256 postId,
         string title,
         string hash,
         bool published
