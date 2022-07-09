@@ -5,7 +5,6 @@ module.exports = {
     mocha: true,
     node: true,
   },
-  plugins: ["@typescript-eslint"],
   extends: [
     "standard",
     "plugin:prettier/recommended",
