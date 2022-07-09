@@ -26,22 +26,37 @@ const Home: NextPage<{ posts: Posts }> = ({ posts }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="text-3xl font-bold">Mirror</div>
-
       <div>
+        <h1 className="font-bold text-2xl px-4">Latest</h1>
         {posts?.map((post, i) => (
           <Link key={i} href={`/posts/${post[2]}`}>
-            <a>
-              <p>{post[1]}</p>
+            <a className="flex gap-2 px-4 py-4 underline underline-offset-8 decoration-red-600">
+              <p className="italic text-2xl font-bold">{post[1]}</p>
+              <button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
             </a>
           </Link>
         ))}
       </div>
 
       <div>
-        {isConnected && address === ownerAddress ? (
+        {isConnected && address === ownerAddress && posts.length === 0 ? (
           <button className="flex items-center" onClick={handleClick}>
-            <span>Create post</span>
+            <span>Create </span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-5"

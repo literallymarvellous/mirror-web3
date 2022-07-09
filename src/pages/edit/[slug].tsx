@@ -13,7 +13,7 @@ import { useAccount, useContractWrite } from "wagmi";
 import { contractAddress } from "../../config";
 import blogABI from "../../../artifacts/contracts/Blog.sol/Blog.json";
 import { ethers } from "ethers";
-import { IParams, ipfsURI } from "../posts/[hash]";
+import { IParams, ipfsURI } from "../posts/[slug]";
 
 const client = create({ url: "https://ipfs.infura.io:5001/api/v0" });
 
@@ -21,7 +21,7 @@ type EditPost = {
   title: string;
   content: string;
   coverImage?: string;
-  coverImagePath?;
+  coverImagePath?: string;
   id: number;
 };
 
@@ -85,7 +85,7 @@ const EditPost: NextPage<{ post: EditPost }> = ({ post }) => {
   };
 
   return (
-    <div>
+    <div className="max-w-5xl mx-auto mt-4">
       {error && (
         <div className="fixed bg-slate-600 z-10 top-5 left-5">{error}</div>
       )}
@@ -93,7 +93,7 @@ const EditPost: NextPage<{ post: EditPost }> = ({ post }) => {
       {isEditing && (
         <div>
           <input
-            className=" w-1/2 border border-gray-600 p-5 mt-10"
+            className=" w-full py-6 text-4xl"
             type="text"
             name="title"
             placeholder="Add Title..."
@@ -106,7 +106,11 @@ const EditPost: NextPage<{ post: EditPost }> = ({ post }) => {
             value={postData.content}
             onChange={editorChange}
           />
-          <button type="button" onClick={updatePost}>
+          <button
+            className="border rounded-lg border-gray-200 mr-6 px-6 py-2 shadow-lg"
+            type="button"
+            onClick={updatePost}
+          >
             UpdatePost
           </button>
         </div>
@@ -117,9 +121,9 @@ const EditPost: NextPage<{ post: EditPost }> = ({ post }) => {
           {
             /* if the post has a cover image, render it */
             post?.coverImage && (
-              <div className="relative w-3/4 h-96">
+              <div className="relative w-full h-96">
                 <Image
-                  src={post.coverImagePath}
+                  src={post.coverImagePath!}
                   layout="fill"
                   objectFit="cover"
                   alt="post's cover image"
@@ -128,20 +132,25 @@ const EditPost: NextPage<{ post: EditPost }> = ({ post }) => {
               </div>
             )
           }
-          <h1>{post.title}</h1>
-          <div>
+          <h1 className="font-bold text-4xl">{post.title}</h1>
+          <div className="mt-4">
             <ReactMarkdown>{post.content}</ReactMarkdown>
           </div>
         </div>
       )}
 
-      <button onClick={onClick}>{isEditing ? "View post" : "Edit post"}</button>
+      <button
+        className="my-4 border rounded-lg border-gray-200 mr-6 px-6 py-2 shadow-lg"
+        onClick={onClick}
+      >
+        {isEditing ? "View post" : "Edit post"}
+      </button>
     </div>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { hash } = params as IParams;
+  const { slug } = params as IParams;
   let provider: ethers.providers.JsonRpcProvider;
   if (process.env.ENVIRONMENT === "local") {
     provider = new ethers.providers.JsonRpcProvider();
@@ -156,10 +165,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 
   const contract = new ethers.Contract(contractAddress, blogABI.abi, provider);
-  const post = await contract.fetchPost(hash);
+  const post = await contract.fetchPost(slug);
   const postId = post[0].toNumber();
 
-  const ipfsUrl = `${ipfsURI}${hash}`;
+  const ipfsUrl = `${ipfsURI}/${slug}`;
   const data = await fetch(ipfsUrl).then((res) => res.json());
 
   if (data.coverImage) {

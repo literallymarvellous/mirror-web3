@@ -17,7 +17,7 @@ import Link from "next/link";
 export const ipfsURI = "https://ipfs.io/ipfs/";
 
 export interface IParams extends ParsedUrlQuery {
-  hash: string;
+  slug: string;
 }
 
 type Post = {
@@ -29,26 +29,29 @@ type Post = {
 const Post: NextPage<{ post: Post }> = ({ post }) => {
   const { isConnected, address } = useAccount();
   const router = useRouter();
-  const { hash } = router.query as IParams;
+  const { slug } = router.query as IParams;
 
   return (
-    <div>
+    <div className="max-w-5xl mx-auto mt-4">
+      {
+        /* if the owner is the user, render an edit button */
+        isConnected && address === ownerAddress && (
+          <Link href={`/edit/${slug}`}>
+            <a className="mb-4">
+              {" "}
+              <button className="border rounded-lg border-gray-200 mr-6 px-6 py-2 shadow-lg">
+                Edit post
+              </button>
+            </a>
+          </Link>
+        )
+      }
       {post && (
-        <div>
-          {
-            /* if the owner is the user, render an edit button */
-            isConnected && address === ownerAddress && (
-              <div>
-                <Link href={`/edit/${hash}`}>
-                  <a>Edit post</a>
-                </Link>
-              </div>
-            )
-          }
+        <div className="">
           {
             /* if the post has a cover image, render it */
             post?.coverImage && (
-              <div className="relative w-3/4 h-96">
+              <div className="relative w-full h-96">
                 <Image
                   src={post.coverImage}
                   layout="fill"
@@ -59,8 +62,8 @@ const Post: NextPage<{ post: Post }> = ({ post }) => {
               </div>
             )
           }
-          <h1>{post.title}</h1>
-          <div>
+          <h1 className="font-bold text-4xl">{post.title}</h1>
+          <div className="mt-4">
             <ReactMarkdown>{post.content}</ReactMarkdown>
           </div>
         </div>
@@ -87,7 +90,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const data = await contract.fetchPosts();
 
   const paths = data.map((post) => ({
-    params: { hash: post[2] },
+    params: { slug: post[2] },
   }));
   return {
     paths,
@@ -96,9 +99,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { hash } = params as IParams;
+  const { slug } = params as IParams;
 
-  const ipfsUrl = `${ipfsURI}/${hash}`;
+  const ipfsUrl = `${ipfsURI}/${slug}`;
   const post = await fetch(ipfsUrl).then((res) => res.json());
 
   if (post.coverImage) {
