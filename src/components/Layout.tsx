@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useAccount } from "wagmi";
 import { ownerAddress } from "../config";
@@ -10,7 +11,7 @@ const Layout = ({ children }) => {
         <div className="px-4 py-3 flex items-center gap-8 ">
           <Link href="/">
             <a>
-              <img src="/logo.svg" alt="React Logo" style={{ width: "50px" }} />
+              <Image src="/logo.svg" alt="React Logo" width={50} height={50} />
             </a>
           </Link>
           <Link href="/">
