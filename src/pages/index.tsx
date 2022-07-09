@@ -28,7 +28,7 @@ const Home: NextPage<{ posts: Posts }> = ({ posts }) => {
 
       <div>
         <h1 className="font-bold text-2xl px-4">Latest</h1>
-        {posts?.map((post, i) => (
+        {posts?.reverse().map((post, i) => (
           <Link key={i} href={`/posts/${post[2]}`}>
             <a className="flex gap-2 px-4 py-4 underline underline-offset-8 decoration-red-600">
               <p className="italic text-2xl font-bold">{post[1]}</p>

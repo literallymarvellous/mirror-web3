@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { Suspense, useCallback, useRef, useState } from "react";
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  suspense: true,
+  ssr: false,
 });
 import Image from "next/image";
 import "easymde/dist/easymde.min.css";
@@ -108,14 +108,12 @@ const CreatePost: NextPage = () => {
           value={post.title}
           onChange={handleChange}
         />
-        <Suspense fallback={<div>Loading...</div>}>
-          <SimpleMDE
-            className="w-full"
-            placeholder="What's on your mind?"
-            value={post.content}
-            onChange={editorChange}
-          />
-        </Suspense>
+        <SimpleMDE
+          className="w-full"
+          placeholder="What's on your mind?"
+          value={post.content}
+          onChange={editorChange}
+        />
         <button
           className="border rounded-lg border-gray-200 mr-6 px-6 py-2 shadow-lg"
           type="button"
