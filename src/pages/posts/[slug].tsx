@@ -105,7 +105,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const post = await fetch(ipfsUrl).then((res) => res.json());
 
   if (post.coverImage) {
-    post.coverImage = `${ipfsURI}${post.coverImage}`;
+    post.coverImage = `${ipfsURI}/${post.coverImage}`;
   }
 
   return {
