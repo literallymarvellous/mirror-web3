@@ -42,7 +42,6 @@ typechain
 
 #Hardhat files
 cache
-artifacts
 
 #subgraph
 blogcms
